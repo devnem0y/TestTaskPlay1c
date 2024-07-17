@@ -12,4 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c02c00331c684c588ec31581c4255602, type: 3}
   m_Name: ConfigPlayer
   m_EditorClassIdentifier: 
-  _prefab: {fileID: 0}
+  _bulletSpeed: 10
+  _bulletDamage: 3
+  _prefab: {fileID: 3495841007839060516, guid: 90a30f71b7be8c24f9a5a0aa2dbe3e0d, type: 3}

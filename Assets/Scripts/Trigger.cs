@@ -9,7 +9,7 @@ public class Trigger : MonoBehaviour
     {
         if (!other.gameObject.CompareTag("Enemy")) return;
         
-        var enemy = other.gameObject.GetComponent<Enemy>();
-        Enter?.Invoke(enemy.Damage);
+        var enemy = other.gameObject.GetComponent<IEnemy>();
+        Enter?.Invoke(enemy.AttackDamage);
     }
 }

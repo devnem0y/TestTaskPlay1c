@@ -11,6 +11,9 @@ public class ConfigEnemy : ScriptableObject
     
     [SerializeField] private int _health;
     public int Health => _health;
+    
+    [SerializeField] private int _attackDamage;
+    public int AttackDamage => _attackDamage;
 
     [SerializeField] private GameObject _prefab;
     public GameObject Prefab => _prefab;

@@ -1,5 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using Object = UnityEngine.Object;
+using Random = UnityEngine.Random;
 
 public class Spawner
 {
@@ -20,7 +24,7 @@ public class Spawner
         _configPlayer = configPlayer;
     }
     
-    public void SpawnEnemy()
+    public void SpawnEnemy(Action callback)
     {
         var randomIndexPoint = Random.Range(0, _spawnEnemyPoints.Count - 1);
         var randomConfigEnemy = _enemyConfigurationStorage.GetRandomConfigEnemy();
@@ -30,6 +34,8 @@ public class Spawner
         var pos = _spawnEnemyPoints[randomIndexPoint].position;
         
         var enemyView = Object.Instantiate(prefab, pos, Quaternion.identity, _spawnEnemyPoints[randomIndexPoint]);
+        var enemy = enemyView.GetComponent<Enemy>();
+        enemy.Init(randomConfigEnemy, callback);
     }
 
     public Player SpawnPlayer()
@@ -46,10 +52,13 @@ public class Spawner
 
     public void RemoveAll()
     {
-        _player = null;
-        Object.Destroy(_spawnPlayerPoint.GetChild(0).gameObject);
+        if (_spawnPlayerPoint.childCount > 0)
+        {
+            _player = null;
+            Object.Destroy(_spawnPlayerPoint.GetChild(0).gameObject);
+        }
 
-        foreach (var enemyPoint in _spawnEnemyPoints)
+        foreach (var enemyPoint in _spawnEnemyPoints.Where(enemyPoint => enemyPoint.childCount > 0))
         {
             for (var i = 0; i < enemyPoint.childCount; i++)
             {

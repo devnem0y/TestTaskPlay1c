@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ceceb4ea63874005a02cab10cc647672, type: 3}
   m_Name: EnemyConfigurationStorage
   m_EditorClassIdentifier: 
+  _defaultPrefab: {fileID: 556247526313593287, guid: 052c14a359bf64c4992526becacd09c7, type: 3}
   _configEnemies:
   - {fileID: 11400000, guid: 0d57ecd2108f5a94eb2dfa3fbfbccb2d, type: 2}
   - {fileID: 11400000, guid: 78cbfc31e6ed64c43a296cc70508cf6e, type: 2}

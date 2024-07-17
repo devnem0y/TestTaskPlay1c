@@ -12,4 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fcf605a3e4245cea471828cfec3d89b, type: 3}
   m_Name: ConfigLevel
   m_EditorClassIdentifier: 
-  _countEnemies: 10
+  _countEnemiesMin: 5
+  _countEnemiesMax: 32
+  _timeoutMin: 1
+  _timeoutMax: 5

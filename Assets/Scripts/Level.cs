@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class Level : MonoBehaviour
+public class Level : MonoBehaviour, ILevel
 {
     [SerializeField] private ConfigLevel _configLevel;
     
@@ -16,6 +17,7 @@ public class Level : MonoBehaviour
     private Spawner _spawner;
     private IPlayer _player;
     
+    public int CountEnemies { get; private set; }
     public IPlayerView Player => _player;
 
     private void Awake()
@@ -32,6 +34,25 @@ public class Level : MonoBehaviour
 
         _player = _spawner.SpawnPlayer();
         _player.Death += OnPlayerDeath;
+        
+        CountEnemies = Random.Range(_configLevel.CountEnemiesMin, _configLevel.CountEnemiesMax);
+        StartCoroutine(SpawnEnemies());
+    }
+
+    private IEnumerator SpawnEnemies()
+    {
+        while (Game.Instance.GameState == GameState.PLAY && CountEnemies > 0)
+        {
+            var timeoutSpawnEnemy = Random.Range(_configLevel.TimeoutMin, _configLevel.TimeoutMax);
+            yield return new WaitForSeconds(timeoutSpawnEnemy);
+            _spawner.SpawnEnemy(() =>
+            {
+                CountEnemies--;
+                if (CountEnemies != 0) return;
+                Game.Instance.ChangeState(GameState.VICTORY);
+                StopAllCoroutines();
+            });
+        }
     }
 
     private void OnTriggerEntered(int damage)
@@ -42,6 +63,7 @@ public class Level : MonoBehaviour
     private void OnPlayerDeath()
     {
         Game.Instance.ChangeState(GameState.DEFEAT);
+        StopAllCoroutines();
     }
 
     private void OnDestroy()

@@ -27,6 +27,7 @@ public class Game : MonoBehaviour
         {
             case GameState.MAIN:
                 Debug.Log("<color=yellow>Main</color>");
+                ChangeState(GameState.PLAY);
                 break;
             case GameState.PLAY:
                 Debug.Log("<color=yellow>Play</color>");
