@@ -10,16 +10,20 @@ public class Enemy : MonoBehaviour, IEnemy
     
     private Action _callback;
     private int _health;
+    private float _moveSpeed;
 
     public void Init(ConfigEnemy config, Action callback)
     {
         _callback = callback;
         _health = config.Health;
+        _moveSpeed = Random.Range(config.MovementSpeedMin, config.MovementSpeedMax);
         
         AttackDamage = 1; //TODO: по тз захардкожено на 1. Но можно сделать, чтобы тянуть из конфига.
-        
-        var movementSpeed = Random.Range(config.MovementSpeedMin, config.MovementSpeedMax);
-        _rb.AddForce(Vector2.down * movementSpeed, ForceMode2D.Impulse);
+    }
+    
+    private void FixedUpdate()
+    {
+        _rb.MovePosition(_rb.position + Vector2.down * _moveSpeed * Time.fixedDeltaTime);
     }
 
     private void OnCollisionEnter2D(Collision2D other)

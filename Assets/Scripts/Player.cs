@@ -3,7 +3,12 @@ using UnityEngine;
 
 public class Player : MonoBehaviour, IPlayer
 {
+    [SerializeField] private Rigidbody2D _rb;
+    [SerializeField] private float _moveSpeed;
     [SerializeField] private Bullet _bullet;
+    [SerializeField] private Transform _radius;
+    [SerializeField] private Transform _turret;
+    [SerializeField] private Transform _shootPoint;
     
     public int Health { get; private set; }
     
@@ -11,9 +16,14 @@ public class Player : MonoBehaviour, IPlayer
     public event Action Death;
 
     private ConfigPlayer _configPlayer;
+    private Vector2 _movement;
+    private float _nextShootTime;
 
     public void Init(ConfigPlayer config)
     {
+        Health = 100;
+        _nextShootTime = 0.1f;
+        
         _configPlayer = config;
     }
     
@@ -32,9 +42,49 @@ public class Player : MonoBehaviour, IPlayer
         TakeDamage?.Invoke();
     }
 
-    public void Shoot()
+    private void Update()
     {
-        var bullet = Instantiate(_bullet);
-        bullet.Init(_configPlayer.BulletSpeed, _configPlayer.BulletDamage);
+        _movement.x = Input.GetAxis("Horizontal");
+        
+        TargetDetection();
     }
+
+    private void FixedUpdate()
+    {
+        _rb.MovePosition(_rb.position + _movement * _moveSpeed * Time.fixedDeltaTime);
+    }
+    
+    private void Shoot()
+    {
+        _nextShootTime -= Time.deltaTime;
+        
+        if (!(_nextShootTime <= 0)) return;
+        
+        var bullet = Instantiate(_bullet, _shootPoint.position, _shootPoint.rotation);
+        bullet.Init(_shootPoint.up, _configPlayer.BulletSpeed, _configPlayer.BulletDamage);
+        _nextShootTime = _configPlayer.ShootRate;
+    }
+
+    private void TargetDetection()
+    {
+        var hitColliders = Physics2D.OverlapCircleAll(_radius.position, _configPlayer.RadiusDefeat);
+
+        foreach (var collider in hitColliders)
+        {
+            if (!collider.CompareTag("Enemy")) continue;
+            
+            var enemy = collider.transform;
+            var direction = enemy.position - _turret.position;
+            var angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
+            _turret.rotation = Quaternion.Euler(0, 0, angle);
+            Shoot();
+            break;
+        }
+    }
+    
+    /*private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(_radius.position, _configPlayer.RadiusDefeat);
+    }*/
 }

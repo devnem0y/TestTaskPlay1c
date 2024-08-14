@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2242a1a84d844a7a63309f23a0f29ad, type: 3}
   m_Name: ConfigEnemy_2
   m_EditorClassIdentifier: 
-  _movementSpeedMin: 5
-  _movementSpeedMax: 10
+  _movementSpeedMin: 2
+  _movementSpeedMax: 6
   _health: 20
   _attackDamage: 1
   _prefab: {fileID: 556247526313593287, guid: 052c14a359bf64c4992526becacd09c7, type: 3}

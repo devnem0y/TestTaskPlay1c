@@ -6,6 +6,12 @@ public class ConfigPlayer : ScriptableObject
     [SerializeField, Min(0f)] private float _bulletSpeed;
     public float BulletSpeed => _bulletSpeed;
     
+    [SerializeField, Min(0f)] private float _radiusDefeat;
+    public float RadiusDefeat => _radiusDefeat;
+    
+    [SerializeField, Min(0f)] private float _shootRate;
+    public float ShootRate => _shootRate;
+    
     [SerializeField] private int _bulletDamage;
     public int BulletDamage => _bulletDamage;
     

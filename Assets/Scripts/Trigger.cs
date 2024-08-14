@@ -11,5 +11,6 @@ public class Trigger : MonoBehaviour
         
         var enemy = other.gameObject.GetComponent<IEnemy>();
         Enter?.Invoke(enemy.AttackDamage);
+        Destroy(other.gameObject);
     }
 }
