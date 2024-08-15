@@ -26,7 +26,7 @@ public class Spawner
     
     public void SpawnEnemy(Action callback)
     {
-        var randomIndexPoint = Random.Range(0, _spawnEnemyPoints.Count - 1);
+        var randomIndexPoint = Random.Range(0, _spawnEnemyPoints.Count);
         var randomConfigEnemy = _enemyConfigurationStorage.GetRandomConfigEnemy();
         var prefab = randomConfigEnemy.Prefab != null
             ? randomConfigEnemy.Prefab
@@ -56,6 +56,7 @@ public class Spawner
         {
             _player = null;
             Object.Destroy(_spawnPlayerPoint.GetChild(0).gameObject);
+            _isPlayerExist = false;
         }
 
         foreach (var enemyPoint in _spawnEnemyPoints.Where(enemyPoint => enemyPoint.childCount > 0))

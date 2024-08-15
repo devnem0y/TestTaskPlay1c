@@ -13,7 +13,7 @@ public class EnemyConfigurationStorage : ScriptableObject
     {
         if (_configEnemies.Count == 0) return null;
         
-        var randomIndex = Random.Range(0, _configEnemies.Count - 1);
+        var randomIndex = Random.Range(0, _configEnemies.Count);
         return _configEnemies[randomIndex];
     }
 }

@@ -163,6 +163,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rb: {fileID: 2932393638239618344}
+  _lblHealth: {fileID: 6877689789283784142}
 --- !u!1 &7511826645392029970
 GameObject:
   m_ObjectHideFlags: 0

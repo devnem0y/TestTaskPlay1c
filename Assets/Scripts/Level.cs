@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Level : MonoBehaviour, ILevel
 {
@@ -18,6 +20,7 @@ public class Level : MonoBehaviour, ILevel
     private IPlayer _player;
     
     public int CountEnemies { get; private set; }
+    public event Action EnemyCountChanged;
     public IPlayerView Player => _player;
 
     private void Awake()
@@ -30,7 +33,6 @@ public class Level : MonoBehaviour, ILevel
     public void Run()
     {
         if (_player != null) _player.Death -= OnPlayerDeath;
-        _spawner.RemoveAll();
 
         _player = _spawner.SpawnPlayer();
         _player.Death += OnPlayerDeath;
@@ -48,7 +50,9 @@ public class Level : MonoBehaviour, ILevel
             _spawner.SpawnEnemy(() =>
             {
                 CountEnemies--;
+                EnemyCountChanged?.Invoke();
                 if (CountEnemies != 0) return;
+                _spawner.RemoveAll();
                 Game.Instance.ChangeState(GameState.VICTORY);
                 StopAllCoroutines();
             });
@@ -58,10 +62,12 @@ public class Level : MonoBehaviour, ILevel
     private void OnTriggerEntered(int damage)
     {
         _player.OnTakeDamage(damage);
+        Game.Instance.Camera.ShakeStart();
     }
 
     private void OnPlayerDeath()
     {
+        _spawner.RemoveAll();
         Game.Instance.ChangeState(GameState.DEFEAT);
         StopAllCoroutines();
     }

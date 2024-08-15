@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: ConfigEnemy_2
   m_EditorClassIdentifier: 
   _movementSpeedMin: 2
-  _movementSpeedMax: 6
-  _health: 20
+  _movementSpeedMax: 4
+  _health: 18
   _attackDamage: 1
   _prefab: {fileID: 556247526313593287, guid: 052c14a359bf64c4992526becacd09c7, type: 3}
   _color: {r: 1, g: 0.43867922, b: 0.43867922, a: 1}

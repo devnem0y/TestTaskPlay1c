@@ -3,6 +3,9 @@
 [CreateAssetMenu(fileName = "ConfigPlayer", menuName = "Configs/Player", order = 1)]
 public class ConfigPlayer : ScriptableObject
 {
+    [SerializeField] private int _health;
+    public int Health => _health;
+    
     [SerializeField, Min(0f)] private float _bulletSpeed;
     public float BulletSpeed => _bulletSpeed;
     

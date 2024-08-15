@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEditor;
 using UnityEngine;
 
 public class Player : MonoBehaviour, IPlayer
@@ -11,7 +12,8 @@ public class Player : MonoBehaviour, IPlayer
     [SerializeField] private Transform _shootPoint;
     
     public int Health { get; private set; }
-    
+    public int Damage { get; private set; }
+
     public event Action TakeDamage;
     public event Action Death;
 
@@ -21,23 +23,19 @@ public class Player : MonoBehaviour, IPlayer
 
     public void Init(ConfigPlayer config)
     {
-        Health = 100;
-        _nextShootTime = 0.1f;
-        
         _configPlayer = config;
+        
+        Health = _configPlayer.Health;
+        Damage = _configPlayer.BulletDamage;
+        _nextShootTime = 0.1f;
     }
     
     public void OnTakeDamage(int damage)
     {
-        if (Health >= damage)
-        {
-            Health -= damage;
-        }
-        else
-        {
-            Health = 0;
-            Death?.Invoke();
-        }
+        if (Health >= damage) Health -= damage;
+        else Health = 0;
+        
+        if (Health <= 0) Death?.Invoke();
         
         TakeDamage?.Invoke();
     }
@@ -69,11 +67,15 @@ public class Player : MonoBehaviour, IPlayer
     {
         var hitColliders = Physics2D.OverlapCircleAll(_radius.position, _configPlayer.RadiusDefeat);
 
-        foreach (var collider in hitColliders)
+        foreach (var hc in hitColliders)
         {
-            if (!collider.CompareTag("Enemy")) continue;
+            if (!hc.CompareTag("Enemy"))
+            {
+                _turret.rotation = Quaternion.Euler(0, 0, 0);
+                continue;
+            }
             
-            var enemy = collider.transform;
+            var enemy = hc.transform;
             var direction = enemy.position - _turret.position;
             var angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
             _turret.rotation = Quaternion.Euler(0, 0, angle);
@@ -82,9 +84,11 @@ public class Player : MonoBehaviour, IPlayer
         }
     }
     
-    /*private void OnDrawGizmosSelected()
+    private void OnDrawGizmosSelected()
     {
+        if (!EditorApplication.isPlaying) return;
+        
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(_radius.position, _configPlayer.RadiusDefeat);
-    }*/
+    }
 }
