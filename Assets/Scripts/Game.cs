@@ -34,7 +34,6 @@ public class Game : MonoBehaviour
         {
             case GameState.MAIN:
                 Debug.Log("<color=yellow>Main</color>");
-                //ChangeState(GameState.PLAY);
                 _uiManager.OpenViewMainPanel();
                 break;
             case GameState.PLAY:
