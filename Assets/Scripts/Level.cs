@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using R3;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -19,8 +19,9 @@ public class Level : MonoBehaviour, ILevel
     private Spawner _spawner;
     private IPlayer _player;
     
-    public int CountEnemies { get; private set; }
-    public event Action EnemyCountChanged;
+    private ReactiveProperty<int> _countEnemies;
+    public Observable<int> CountEnemies => _countEnemies;
+    
     public IPlayerView Player => _player;
 
     private void Awake()
@@ -37,21 +38,22 @@ public class Level : MonoBehaviour, ILevel
         _player = _spawner.SpawnPlayer();
         _player.Death += OnPlayerDeath;
         
-        CountEnemies = Random.Range(_configLevel.CountEnemiesMin, _configLevel.CountEnemiesMax);
+        var rndEnemies= Random.Range(_configLevel.CountEnemiesMin, _configLevel.CountEnemiesMax);
+        _countEnemies = new ReactiveProperty<int>(rndEnemies);
+        
         StartCoroutine(SpawnEnemies());
     }
 
     private IEnumerator SpawnEnemies()
     {
-        while (Game.Instance.GameState == GameState.PLAY && CountEnemies > 0)
+        while (Game.Instance.GameState == GameState.PLAY && _countEnemies.Value > 0)
         {
             var timeoutSpawnEnemy = Random.Range(_configLevel.TimeoutMin, _configLevel.TimeoutMax);
             yield return new WaitForSeconds(timeoutSpawnEnemy);
             _spawner.SpawnEnemy(() =>
             {
-                CountEnemies--;
-                EnemyCountChanged?.Invoke();
-                if (CountEnemies != 0) return;
+                _countEnemies.Value--;
+                if (_countEnemies.Value != 0) return;
                 _spawner.RemoveAll();
                 Game.Instance.ChangeState(GameState.VICTORY);
                 StopAllCoroutines();

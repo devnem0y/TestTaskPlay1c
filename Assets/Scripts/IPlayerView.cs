@@ -1,9 +1,7 @@
-﻿using System;
+﻿using R3;
 
 public interface IPlayerView
 {
-    public int Health { get; }
+    public Observable<int> Health { get; }
     public int Damage{ get; }
-    
-    public event Action TakeDamage;
 }

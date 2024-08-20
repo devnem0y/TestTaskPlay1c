@@ -1,8 +1,10 @@
-﻿using System;
+﻿using R3;
 
 public interface ILevel
 {
-    public int CountEnemies { get; }
+    public Observable<int> CountEnemies { get; }
     
-    public event Action EnemyCountChanged;
+    /*public int CountEnemies { get; }
+    
+    public event Action EnemyCountChanged;*/
 }
